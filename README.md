@@ -18,7 +18,7 @@ sh <(curl -L https://github.com/numtide/nix-flakes-installer/releases/download/n
 
 ### GitHub Actions
 
-```
+```yaml
 name: "Test"
 on:
   pull_request:

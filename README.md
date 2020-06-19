@@ -8,7 +8,15 @@ project publishes official releases.
 * Release: `nix-2.4pre20200618_377345e`
 * Hydra eval: https://hydra.nixos.org/eval/1594477
 
-## Usage with GitHub Actions
+## Usage
+
+### Systems
+
+```sh
+sh <(curl -L https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20200618_377345e/install)
+```
+
+### GitHub Actions
 
 ```
 name: "Test"

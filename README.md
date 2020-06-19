@@ -22,9 +22,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: cachix/install-nix-action@v10
       with:
-        nix_path: nixpkgs=channel:nixos-unstable
-        install_url:
-        https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20200618_377345e/install
+        install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20200618_377345e/install
     - run: nix-build
 ```
 

@@ -27,3 +27,14 @@ jobs:
         https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20200618_377345e/install
     - run: nix-build
 ```
+
+## Current release process
+
+* Go to https://hydra.nixos.org/jobset/nix/flakes
+* Pick the latest successful build
+* Download the `installerScript` and the `binaryTarball.*`
+* Update this README.md with the release ID.
+* Tag with the release ID.
+* Push to GitHub
+* Edit the `install` script and repelace `https://releases.nixos.org/nix` with `https://github.com/numtide/nix-flakes-installer/releases/download`
+* Attach all those files to the tag and make a GitHub Release.

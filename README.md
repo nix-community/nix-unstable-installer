@@ -34,5 +34,5 @@ jobs:
 * Update this README.md with the release ID.
 * Tag with the release ID.
 * Push to GitHub
-* Edit the `install` script and repelace `https://releases.nixos.org/nix` with `https://github.com/numtide/nix-flakes-installer/releases/download`
+* Edit the `install` script and replace `https://releases.nixos.org/nix` with `https://github.com/numtide/nix-flakes-installer/releases/download`
 * Attach all those files to the tag and make a GitHub Release.

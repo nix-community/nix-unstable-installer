@@ -5,15 +5,15 @@ project publishes official releases.
 
 ## Latest release
 
-* Release: `nix-2.4pre20200618_377345e`
-* Hydra eval: https://hydra.nixos.org/eval/1594477
+* Release: `nix-3.0pre20200804_ed52cf6`
+* Hydra eval: https://hydra.nixos.org/eval/1604298
 
 ## Usage
 
 ### Systems
 
 ```sh
-sh <(curl -L https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20200618_377345e/install)
+sh <(curl -L https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20200804_ed52cf6/install)
 ```
 
 ### GitHub Actions
@@ -33,7 +33,7 @@ jobs:
         fetch-depth: 0
     - uses: cachix/install-nix-action@v10
       with:
-        install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20200618_377345e/install
+        install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20200804_ed52cf6/install
     # Configure Nix to enable flakes
     - run: echo "experimental-features = nix-command flakes" | sudo tee -a /etc/nix/nix.conf
     # Run the general flake checks

@@ -5,15 +5,15 @@ project publishes official releases.
 
 ## Latest release
 
-* Release: `nix-3.0pre20200804_ed52cf6`
-* Hydra eval: https://hydra.nixos.org/eval/1604298
+* Release: `nix-3.0pre20200820_4d77513`
+* Hydra eval: https://hydra.nixos.org/eval/1608130
 
 ## Usage
 
 ### Systems
 
 ```sh
-sh <(curl -L https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20200804_ed52cf6/install)
+sh <(curl -L https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20200820_4d77513/install)
 ```
 
 ### GitHub Actions
@@ -33,7 +33,7 @@ jobs:
         fetch-depth: 0
     - uses: cachix/install-nix-action@v10
       with:
-        install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20200804_ed52cf6/install
+        install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20200820_4d77513/install
     # Configure Nix to enable flakes
     - run: echo "experimental-features = nix-command flakes" | sudo tee -a /etc/nix/nix.conf
     # Run the general flake checks
@@ -44,7 +44,7 @@ jobs:
 
 ## Current release process
 
-* Go to https://hydra.nixos.org/jobset/nix/flakes
+* Go to https://hydra.nixos.org/jobset/nix/master
 * Pick the latest successful build
 * Download the `installerScript` and the `binaryTarball.*`
 * Update this README.md with the release ID.

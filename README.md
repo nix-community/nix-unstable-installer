@@ -5,15 +5,15 @@ project publishes official releases.
 
 ## Latest release
 
-* Release: `nix-3.0pre20200820_4d77513`
-* Hydra eval: https://hydra.nixos.org/eval/1608130
+* Release: `nix-3.0pre20201007_5257a25`
+* Hydra eval: https://hydra.nixos.org/eval/1618056
 
 ## Usage
 
 ### Systems
 
 ```sh
-sh <(curl -L https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20200820_4d77513/install)
+sh <(curl -L https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20201007_5257a25/install)
 ```
 
 ### GitHub Actions
@@ -31,11 +31,12 @@ jobs:
       with:
         # Nix Flakes doesn't work on shallow clones
         fetch-depth: 0
-    - uses: cachix/install-nix-action@v10
+    - uses: cachix/install-nix-action@v11
       with:
-        install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-3.0pre20200820_4d77513/install
-    # Configure Nix to enable flakes
-    - run: echo "experimental-features = nix-command flakes" | sudo tee -a /etc/nix/nix.conf
+        install_url: https://github.com/numtide/nix-flakes-installer/releases/download//install
+        # Configure Nix to enable flakes
+        extra_nix_config: |
+          experimental-features = nix-command flakes
     # Run the general flake checks
     - run: nix flake check
     # Verify that the main program builds
@@ -45,10 +46,8 @@ jobs:
 ## Current release process
 
 * Go to https://hydra.nixos.org/jobset/nix/master
-* Pick the latest successful build
-* Download the `installerScript` and the `binaryTarball.*`
-* Update this README.md with the release ID.
+* Find the latest eval ID
+* Run `./update.rb <eval ID>`
 * Tag with the release ID.
 * Push to GitHub
-* Edit the `install` script and replace `https://releases.nixos.org/nix` with `https://github.com/numtide/nix-flakes-installer/releases/download`
-* Attach all those files to the tag and make a GitHub Release.
+* Create a new GitHub release and attach all those files in the ./dist folder.

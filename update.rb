@@ -1,10 +1,9 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -p ruby -i ruby
+#!nix-shell -p ruby curl -i ruby
 require 'erb'
 require 'fileutils'
 require 'json'
 require 'net/http'
-require 'pp'
 
 def fetch_json(url)
   uri = URI(url)
@@ -17,23 +16,19 @@ def fetch_json(url)
   end
 end
 
-def download(url, path, &block)
-  uri = URI(url)
-  Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https') do |http|
-    http.request_get(uri.path, {"Content-Type" => "application/json"}) do |response|
-      response.read_body do |str|
-        if block_given?
-          str = block.call(str)
-        end
-        File.write(path, str)
-      end
-    end
-  end
+def download(url, path)
+  system("curl", "-fL", "-o", path, url)
 end
 
 def render_readme(eval_id, release_id)
   b = binding
   ERB.new(File.read('README.md.erb')).result b
+end
+
+def rewrite(path, &block)
+  body = File.read(path)
+  new_body = yield body
+  File.write(path, new_body)
 end
 
 def main(eval_id)
@@ -58,17 +53,9 @@ def main(eval_id)
       release_id = data["nixname"]
       puts "release ID: #{release_id}"
     when "installerScript"
-      if release_id == nil then
-        raise "oops"
-      end
       puts "download installerScript"
       filename = data["buildproducts"]["1"]["name"]
-      download("https://hydra.nixos.org/build/#{build_id}/download/1/#{filename}", "dist/#{filename}") do |body|
-        body.gsub(
-          'url="https://releases.nixos.org/nix/',
-          'url="https://github.com/numtide/nix-flakes-installer/releases/download/'
-        )
-      end
+      download("https://hydra.nixos.org/build/#{build_id}/download/1/#{filename}", "dist/#{filename}")
     when "binaryTarball.aarch64-linux"
       puts "download binaryTarball.aarch64-linux"
       filename = data["buildproducts"]["1"]["name"]
@@ -87,6 +74,14 @@ def main(eval_id)
       download("https://hydra.nixos.org/build/#{build_id}/download/1/#{filename}", "dist/#{filename}")
     end
 
+  end
+
+  # Rewrite the installer
+  rewrite("dist/install") do |body|
+    body.gsub(
+      'url="https://releases.nixos.org/nix/',
+      'url="https://github.com/numtide/nix-flakes-installer/releases/download/'
+    )
   end
 
   # Update the README file

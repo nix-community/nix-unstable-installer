@@ -1,7 +1,9 @@
 # Nix Flakes installer
 
-This is a temporary place to host Nix Flakes releases, until the NixOS
-project publishes official releases.
+This is a temporary place to host Nix Flakes releases, until the NixOS project
+publishes official releases.
+
+NOTE: Nix went backwards in the pre-releases from 3.0 to 2.4.
 
 ## Latest release
 

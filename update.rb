@@ -8,6 +8,7 @@ require 'net/http'
 def fetch_json(url)
   puts "fetching #{url}"
   uri = URI(url)
+  p url
   Net::HTTP.start(uri.hostname, uri.port, :use_ssl => uri.scheme == 'https') do |http|
     http.request_get(uri.path, {"Content-Type" => "application/json"}) do |response|
       response.read_body do |str|

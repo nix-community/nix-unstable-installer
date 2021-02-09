@@ -74,6 +74,12 @@ def main(eval_id)
       puts "download binaryTarball.x86_64-linux"
       filename = data["buildproducts"]["1"]["name"]
       download("https://hydra.nixos.org/build/#{build_id}/download/1/#{filename}", "dist/#{filename}")
+    when /^(buildStatic\..*)/
+      name = $1
+      puts "download #{name}"
+      filename = data["buildproducts"]["1"]["name"]
+      download("https://hydra.nixos.org/build/#{build_id}/download/1/#{filename}", "dist/#{name}")
+      system("chmod", "+x", "dist/#{name}")
     end
 
   end

@@ -7,15 +7,15 @@ NOTE: Nix went backwards in the pre-releases from 3.0 to 2.4.
 
 ## Latest release
 
-* Release: `nix-2.4pre20210126_f15f0b8`
-* Hydra eval: https://hydra.nixos.org/eval/1644847
+* Release: `nix-2.4pre20210207_fd6eaa1`
+* Hydra eval: https://hydra.nixos.org/eval/1647711
 
 ## Usage
 
 ### Systems
 
 ```sh
-sh <(curl -L https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20210126_f15f0b8/install)
+sh <(curl -L https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20210207_fd6eaa1/install)
 ```
 
 ### GitHub Actions
@@ -35,7 +35,7 @@ jobs:
         fetch-depth: 0
     - uses: cachix/install-nix-action@v11
       with:
-        install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20210126_f15f0b8/install
+        install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20210207_fd6eaa1/install
         # Configure Nix to enable flakes
         extra_nix_config: |
           experimental-features = nix-command flakes

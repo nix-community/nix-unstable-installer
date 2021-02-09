@@ -16,6 +16,10 @@ def fetch_json(url)
       end
     end
   end
+rescue JSON::ParserError
+  puts "ERROR: JSON Parser error. Retrying in 1 second."
+  sleep 1
+  retry
 end
 
 def download(url, path)

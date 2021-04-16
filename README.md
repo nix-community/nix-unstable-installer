@@ -1,24 +1,28 @@
-# Nix Flakes installer
+# Nix unstable installer
 
-This is a temporary place to host Nix Flakes releases, until the NixOS project
-publishes official releases.
+This project is about making Nix unstable release available to the general
+public. It allows to test and use preview features like Flakes and provide
+early feedback.
 
-NOTE: Nix went backwards in the pre-releases from 3.0 to 2.4.
+All it does is copy the release tarballs from Hydra and tweak the install
+script so that it fetches them from GitHub instead.
 
 ## Latest release
 
-* Release: `nix-2.4pre20210126_f15f0b8`
-* Hydra eval: https://hydra.nixos.org/eval/1644847
+* Release: `nix-2.4pre20210415_76980a1`
+* Hydra eval: https://hydra.nixos.org/eval/1663087
 
 ## Usage
 
 ### Systems
 
 ```sh
-sh <(curl -L https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20210126_f15f0b8/install)
+sh <(curl -L https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20210415_76980a1/install)
 ```
 
 ### GitHub Actions
+
+Here is an example using Flakes:
 
 ```yaml
 name: "Test"
@@ -35,7 +39,7 @@ jobs:
         fetch-depth: 0
     - uses: cachix/install-nix-action@v11
       with:
-        install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20210126_f15f0b8/install
+        install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20210415_76980a1/install
         # Configure Nix to enable flakes
         extra_nix_config: |
           experimental-features = nix-command flakes

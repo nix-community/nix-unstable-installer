@@ -1,9 +1,11 @@
-# Nix Flakes installer
+# Nix unstable installer
 
-This is a temporary place to host Nix Flakes releases, until the NixOS project
-publishes official releases.
+This project is about making Nix unstable release available to the general
+public. It allows to test and use preview features like Flakes and provide
+early feedback.
 
-NOTE: Nix went backwards in the pre-releases from 3.0 to 2.4.
+All it does is copy the release tarballs from Hydra and tweak the install
+script so that it fetches them from GitHub instead.
 
 ## Latest release
 
@@ -19,6 +21,8 @@ sh <(curl -L https://github.com/numtide/nix-flakes-installer/releases/download/<
 ```
 
 ### GitHub Actions
+
+Here is an example using Flakes:
 
 ```yaml
 name: "Test"

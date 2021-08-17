@@ -86,7 +86,7 @@ def main(eval_id)
   rewrite("dist/install") do |body|
     body.gsub(
       'url=https://releases.nixos.org/nix/',
-      'url=https://github.com/numtide/nix-flakes-installer/releases/download/'
+      'url=https://github.com/numtide/nix-unstable-installer/releases/download/'
     )
   end
 

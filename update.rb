@@ -58,6 +58,10 @@ def main(eval_id)
       puts "download installerScript"
       filename = data["buildproducts"]["1"]["name"]
       download("https://hydra.nixos.org/build/#{build_id}/download/1/#{filename}", "dist/#{filename}")
+    when "binaryTarball.aarch64-darwin"
+      puts "download binaryTarball.aarch64-darwin"
+      filename = data["buildproducts"]["1"]["name"]
+      download("https://hydra.nixos.org/build/#{build_id}/download/1/#{filename}", "dist/#{filename}")
     when "binaryTarball.aarch64-linux"
       puts "download binaryTarball.aarch64-linux"
       filename = data["buildproducts"]["1"]["name"]

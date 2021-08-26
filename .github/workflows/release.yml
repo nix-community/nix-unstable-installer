@@ -1,0 +1,108 @@
+name: Release
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+jobs:
+  update:
+    name: Update
+    runs-on: ubuntu-latest
+    outputs:
+      hydra_eval: ${{ steps.update.outputs.hydra_eval }}
+      nix_release: ${{ steps.update.outputs.nix_release }}
+      updated: ${{ steps.update.outputs.updated }}
+    steps:
+      - uses: cachix/install-nix-action@v13
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+      - name: Update from latest Hydra eval
+        id: update
+        run: ./update.rb
+
+      - name: Push changes
+        if: steps.update.outputs.updated == 'true'
+        env:
+          NIX_RELEASE: ${{ steps.update.outputs.nix_release }}
+        run: |
+          [ -n "$NIX_RELEASE" ] || (echo 'NIX_RELEASE empty or undefined' >&2; exit 1)
+
+          git commit -m "Release $NIX_RELEASE" README.md
+          git push origin HEAD:update/"$NIX_RELEASE"
+
+          git tag "$NIX_RELEASE"
+          git push origin "$NIX_RELEASE"
+
+      - name: Create release
+        if: steps.update.outputs.updated == 'true'
+        uses: actions/github-script@v4
+        env:
+          HYDRA_EVAL: ${{ steps.update.outputs.hydra_eval }}
+          NIX_RELEASE: ${{ steps.update.outputs.nix_release }}
+        with:
+          script: await require('.ci/create-prerelease.js')({require, context, core, github});
+
+  test:
+    name: Test
+    needs: [update]
+    if: needs.update.outputs.updated == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: cachix/install-nix-action@v13
+        with:
+          install_url: https://github.com/${{ github.repository }}/releases/download/${{ needs.update.outputs.nix_release }}/install
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - name: Run nix-info
+        run: |
+          nix shell nixpkgs#nix-info -c nix-info -m
+
+  release:
+    name: Release
+    needs: [update, test]
+    if: needs.update.outputs.updated == 'true' && startsWith(github.ref, 'refs/heads/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Configure git
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+      - name: Update main branch
+        env:
+          NIX_RELEASE: ${{ needs.update.outputs.nix_release }}
+        run: |
+          [ -n "$NIX_RELEASE" ] || (echo 'NIX_RELEASE empty or undefined' >&2; exit 1)
+
+          git cherry-pick origin/update/"$NIX_RELEASE"
+          git push origin "$GITHUB_REF"
+
+          git tag -f "$NIX_RELEASE"
+          git push -f origin "$NIX_RELEASE"
+
+          git push origin -d update/"$NIX_RELEASE"
+
+      - name: Create full release
+        uses: actions/github-script@v4
+        env:
+          NIX_RELEASE: ${{ needs.update.outputs.nix_release }}
+        with:
+          script: await require('.ci/mark-release.js')({require, context, core, github});

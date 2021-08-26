@@ -9,15 +9,15 @@ script so that it fetches them from GitHub instead.
 
 ## Latest release
 
-* Release: `nix-2.4pre20210604_8e6ee1b`
-* Hydra eval: https://hydra.nixos.org/eval/1675607
+* Release: `nix-2.4pre20210823_af94b54`
+* Hydra eval: https://hydra.nixos.org/eval/1698813
 
 ## Usage
 
 ### Systems
 
 ```sh
-sh <(curl -L https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20210604_8e6ee1b/install)
+sh <(curl -L https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.4pre20210823_af94b54/install)
 ```
 
 ### GitHub Actions
@@ -36,7 +36,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: cachix/install-nix-action@v11
       with:
-        install_url: https://github.com/numtide/nix-flakes-installer/releases/download/nix-2.4pre20210604_8e6ee1b/install
+        install_url: https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.4pre20210823_af94b54/install
         # Configure Nix to enable flakes
         extra_nix_config: |
           experimental-features = nix-command flakes
@@ -48,9 +48,7 @@ jobs:
 
 ## Current release process
 
-* Go to https://hydra.nixos.org/jobset/nix/master
-* Find the latest eval ID
-* Run `./update.rb <eval ID>`
-* Tag with the release ID.
+* Run `./update.rb [eval_id]` (uses latest successful if no eval ID given)
+* Tag with the release name
 * Push to GitHub
-* Create a new GitHub release and attach all those files in the ./dist folder.
+* Create a new GitHub release and attach all files in the ./dist folder

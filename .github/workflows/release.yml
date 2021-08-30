@@ -57,7 +57,10 @@ jobs:
     name: Test
     needs: [update]
     if: needs.update.outputs.updated == 'true'
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: cachix/install-nix-action@v13
         with:

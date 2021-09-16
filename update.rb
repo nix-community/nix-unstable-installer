@@ -64,8 +64,8 @@ def get_eval(eval_id, skip_existing_tag = false)
     data = fetch_json("https://hydra.nixos.org/build/#{build_id}")
     job = data["job"]
 
-    if data["buildstatus"] > 0
-      puts "evaluation #{eval_id} has failed jobs"
+    if data["buildstatus"].nil? || data["buildstatus"] > 0
+      puts "evaluation #{eval_id} has failed or queued jobs"
       return :failure
     end
 

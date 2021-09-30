@@ -55,6 +55,7 @@ def get_eval(eval_id, skip_existing_tag = false)
   release_name = nil
 
   dist_jobs = ["installerScript", "binaryTarball.aarch64-darwin", "binaryTarball.aarch64-linux", "binaryTarball.i686-linux", "binaryTarball.x86_64-darwin", "binaryTarball.x86_64-linux"]
+  prefixes = ["build.", "installerScript", "binaryTarball.", "tests."]
 
   downloads = []
 
@@ -63,6 +64,10 @@ def get_eval(eval_id, skip_existing_tag = false)
   res["builds"].each do |build_id|
     data = fetch_json("https://hydra.nixos.org/build/#{build_id}")
     job = data["job"]
+
+    if prefixes.none? { |prefix| job.start_with? prefix }
+      next
+    end
 
     if data["buildstatus"].nil? || data["buildstatus"] > 0
       puts "evaluation #{eval_id} has failed or queued jobs"

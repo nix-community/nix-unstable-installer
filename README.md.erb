@@ -34,12 +34,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: cachix/install-nix-action@v11
+    - uses: cachix/install-nix-action@v15
       with:
         install_url: https://github.com/numtide/nix-unstable-installer/releases/download/<%= release_name %>/install
-        # Configure Nix to enable flakes
-        extra_nix_config: |
-          experimental-features = nix-command flakes
     # Run the general flake checks
     - run: nix flake check
     # Verify that the main program builds

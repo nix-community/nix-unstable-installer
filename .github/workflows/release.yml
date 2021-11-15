@@ -14,7 +14,7 @@ jobs:
       nix_release: ${{ steps.update.outputs.nix_release }}
       updated: ${{ steps.update.outputs.updated }}
     steps:
-      - uses: cachix/install-nix-action@v14
+      - uses: cachix/install-nix-action@v15
         with:
           nix_path: nixpkgs=channel:nixos-unstable
 
@@ -62,17 +62,16 @@ jobs:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: cachix/install-nix-action@v14
+      - uses: cachix/install-nix-action@v15
         with:
           install_url: https://github.com/${{ github.repository }}/releases/download/${{ needs.update.outputs.nix_release }}/install
           extra_nix_config: |
-            experimental-features = nix-command flakes
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
           nix_path: nixpkgs=channel:nixos-unstable
 
       - name: Run nix-info
         run: |
-          nix shell nixpkgs#nix-info -c nix-info -m
+          nix run nixpkgs#nix-info -- -m
 
   release:
     name: Release

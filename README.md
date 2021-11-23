@@ -32,6 +32,8 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
     steps:
     - uses: actions/checkout@v2
     - uses: cachix/install-nix-action@v11

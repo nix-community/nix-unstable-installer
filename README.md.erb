@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - uses: cachix/install-nix-action@v15
+    - uses: cachix/install-nix-action@<%= install_nix_action_version %>
       with:
         install_url: https://github.com/numtide/nix-unstable-installer/releases/download/<%= release_name %>/install
     # Run the general flake checks

@@ -4,6 +4,7 @@ require 'erb'
 require 'fileutils'
 require 'json'
 require 'net/http'
+require 'yaml'
 
 def fetch_json(url, tries = 10)
   if tries <= 0
@@ -40,7 +41,7 @@ def download(url, path)
   system("curl", "-sfL", "-o", path, url)
 end
 
-def render_readme(eval_id, release_name)
+def render_readme(eval_id, release_name, install_nix_action_version)
   b = binding
   ERB.new(File.read("README.md.erb")).result b
 end
@@ -117,8 +118,15 @@ def get_eval(eval_id, skip_existing_tag = false)
     )
   end
 
+  # Get cachix/install-nix-action version for the README
+  begin
+    install_nix_action_version = YAML.load_file(".github/workflows/release.yml")["jobs"]["update"]["steps"].find { |step| step["uses"].start_with? "cachix/install-nix-action@" }["uses"].split("@", 2).last
+  rescue Errno::ENOENT
+    install_nix_action_version = "master"
+  end
+
   # Update the README file
-  readme = render_readme(eval_id, release_name)
+  readme = render_readme(eval_id, release_name, install_nix_action_version)
   File.write("README.md", readme)
 
   return release_name
@@ -156,7 +164,7 @@ def main(eval_id)
       eval_id = latest["evals"][eval_idx]["id"]
 
       # Get evaluation details
-      eval_result = get_eval(eval_id, skip_existing_result = true)
+      eval_result = get_eval(eval_id, skip_existing_tag = true)
       case eval_result
       when :failure
         eval_idx += 1

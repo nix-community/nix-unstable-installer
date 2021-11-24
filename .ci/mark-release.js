@@ -8,14 +8,14 @@ module.exports = async ({require, context, core, github}) => {
 
   core.info(`Finding release for tag '${tag}'`);
 
-  const release = await github.repos.getReleaseByTag({
+  const release = await github.rest.repos.getReleaseByTag({
     ...context.repo,
     tag: tag,
   });
 
   core.info(`Marking as full release`);
 
-  await github.repos.updateRelease({
+  await github.rest.repos.updateRelease({
     ...context.repo,
     release_id: release.data.id,
     prerelease: false,

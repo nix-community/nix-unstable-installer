@@ -30,7 +30,7 @@ module.exports = async ({require, context, core, github}) => {
 
   core.info(`Creating prerelease for tag '${tag}'`);
 
-  const release = await github.repos.createRelease({
+  const release = await github.rest.repos.createRelease({
     ...context.repo,
     tag_name: tag,
     name: name,
@@ -46,7 +46,7 @@ module.exports = async ({require, context, core, github}) => {
   for (let [asset_name, asset_path] of Object.entries(assets)) {
     core.info(`Uploading '${asset_name}' from '${asset_path}'`);
 
-    await github.repos.uploadReleaseAsset({
+    await github.rest.repos.uploadReleaseAsset({
       ...context.repo,
       release_id: release.data.id,
       name: asset_name,

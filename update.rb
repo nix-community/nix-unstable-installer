@@ -56,7 +56,7 @@ def get_eval(eval_id, skip_existing_tag = false)
   release_name = nil
 
   dist_jobs = ["installerScript", "binaryTarball.aarch64-darwin", "binaryTarball.aarch64-linux", "binaryTarball.i686-linux", "binaryTarball.x86_64-darwin", "binaryTarball.x86_64-linux"]
-  prefixes = ["build.", "installerScript", "binaryTarball.", "tests."]
+  prefixes = ["build.", "installerScript", "binaryTarball.", "tests.", "installTests."]
 
   downloads = []
 
@@ -70,7 +70,7 @@ def get_eval(eval_id, skip_existing_tag = false)
       next
     end
 
-    if data["buildstatus"].nil? || data["buildstatus"] > 0
+    if data["buildstatus"].nil? or data["buildstatus"] > 0
       puts "evaluation #{eval_id} has failed or queued jobs"
       return :failure
     end
@@ -120,7 +120,7 @@ def get_eval(eval_id, skip_existing_tag = false)
 
   # Get cachix/install-nix-action version for the README
   begin
-    install_nix_action_version = YAML.load_file(".github/workflows/release.yml")["jobs"]["update"]["steps"].find { |step| step["uses"].start_with? "cachix/install-nix-action@" }["uses"].split("@", 2).last
+    install_nix_action_version = YAML.load_file(".github/workflows/release.yml")["jobs"]["update"]["steps"].find { |step| step.has_key? "uses" and step["uses"].start_with? "cachix/install-nix-action@" }["uses"].split("@", 2).last
   rescue Errno::ENOENT
     install_nix_action_version = "master"
   end

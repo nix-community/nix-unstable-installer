@@ -46,7 +46,7 @@ jobs:
 
       - name: Create release
         if: steps.update.outputs.updated == 'true'
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         env:
           HYDRA_EVAL: ${{ steps.update.outputs.hydra_eval }}
           NIX_RELEASE: ${{ steps.update.outputs.nix_release }}
@@ -103,7 +103,7 @@ jobs:
           git push origin -d update/"$NIX_RELEASE"
 
       - name: Create full release
-        uses: actions/github-script@v5
+        uses: actions/github-script@v6
         env:
           NIX_RELEASE: ${{ needs.update.outputs.nix_release }}
         with:

@@ -55,7 +55,16 @@ end
 def get_eval(eval_id, skip_existing_tag = false)
   release_name = nil
 
-  dist_jobs = ["installerScript", "binaryTarball.aarch64-darwin", "binaryTarball.aarch64-linux", "binaryTarball.i686-linux", "binaryTarball.x86_64-darwin", "binaryTarball.x86_64-linux"]
+  dist_jobs = [
+    "binaryTarball.aarch64-darwin",
+    "binaryTarball.aarch64-linux",
+    "binaryTarball.i686-linux",
+    "binaryTarball.x86_64-darwin",
+    "binaryTarball.x86_64-linux",
+    "buildStatic.aarch64-linux",
+    "buildStatic.x86_64-linux",
+    "installerScript",
+  ]
   prefixes = ["build.", "installerScript", "binaryTarball.", "tests.", "installTests."]
 
   downloads = []

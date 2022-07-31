@@ -33,7 +33,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@<%= install_nix_action_version %>
       with:
         install_url: https://github.com/numtide/nix-unstable-installer/releases/download/<%= release_name %>/install
@@ -46,6 +46,6 @@ jobs:
 ## Current release process
 
 * Run `./update.rb [eval_id]` (uses latest successful if no eval ID given)
-* Tag with the release name
+* Commit and tag with the release name
 * Push to GitHub
 * Create a new GitHub release and attach all files in the ./dist folder

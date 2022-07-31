@@ -116,7 +116,15 @@ def get_eval(eval_id, skip_existing_tag = false)
   # Download files
   downloads.each do |job, build_id, filename|
     puts "downloading #{job}"
-    download("https://hydra.nixos.org/build/#{build_id}/download/1/#{filename}", "dist/#{filename}")
+
+    case job.split(".", 2).first
+    when "buildStatic"
+      dest = release_name + "-static-" + job.split(".", 2).last
+    else
+      dest = filename
+    end
+
+    download("https://hydra.nixos.org/build/#{build_id}/download/1/#{filename}", "dist/#{dest}")
   end
 
   # Rewrite the installer

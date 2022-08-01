@@ -94,6 +94,7 @@ jobs:
         run: |
           [ -n "$NIX_RELEASE" ] || (echo 'NIX_RELEASE empty or undefined' >&2; exit 1)
 
+          git pull origin "$GITHUB_REF"
           git cherry-pick origin/update/"$NIX_RELEASE"
           git push origin "$GITHUB_REF"
 

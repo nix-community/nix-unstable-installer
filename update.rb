@@ -65,7 +65,7 @@ def get_eval(eval_id, skip_existing_tag = false)
     "buildStatic.x86_64-linux",
     "installerScript",
   ]
-  prefixes = ["build.", "installerScript", "binaryTarball.", "tests.", "installTests."]
+  extra_prefixes = ["build.", "buildStatic.", "tests.", "installTests."]
 
   downloads = []
 
@@ -75,7 +75,7 @@ def get_eval(eval_id, skip_existing_tag = false)
     data = fetch_json("https://hydra.nixos.org/build/#{build_id}")
     job = data["job"]
 
-    if prefixes.none? { |prefix| job.start_with? prefix }
+    if dist_jobs.none?(job) and extra_prefixes.none? { |prefix| job.start_with? prefix }
       next
     end
 
@@ -116,7 +116,15 @@ def get_eval(eval_id, skip_existing_tag = false)
   # Download files
   downloads.each do |job, build_id, filename|
     puts "downloading #{job}"
-    download("https://hydra.nixos.org/build/#{build_id}/download/1/#{filename}", "dist/#{filename}")
+
+    case job.split(".", 2).first
+    when "buildStatic"
+      dest = release_name + "-static-" + job.split(".", 2).last
+    else
+      dest = filename
+    end
+
+    download("https://hydra.nixos.org/build/#{build_id}/download/1/#{filename}", "dist/#{dest}")
   end
 
   # Rewrite the installer

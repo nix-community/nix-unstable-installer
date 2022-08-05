@@ -64,7 +64,7 @@ jobs:
     steps:
       - uses: cachix/install-nix-action@v17
         with:
-          install_url: https://github.com/${{ github.repository }}/releases/download/${{ needs.update.outputs.nix_release }}/install
+          install_url: ${{ github.server_url }}/${{ github.repository }}/releases/download/${{ needs.update.outputs.nix_release }}/install
           extra_nix_config: |
             access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
           nix_path: nixpkgs=channel:nixpkgs-unstable
@@ -72,6 +72,24 @@ jobs:
       - name: Run nix-info
         run: |
           nix run nixpkgs#nix-info -- -m
+
+      - name: Pull container image
+        if: runner.os == 'Linux'
+        env:
+          NIX_RELEASE: ${{ needs.update.outputs.nix_release }}
+        run: |
+          [ -n "$NIX_RELEASE" ] || (echo 'NIX_RELEASE empty or undefined' >&2; exit 1)
+
+          curl -sfL "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/$NIX_RELEASE/$NIX_RELEASE-$(uname -m)-linux-container.tar.gz" |
+            docker load --quiet
+
+      - name: Run nix-info in container image
+        if: runner.os == 'Linux'
+        env:
+          NIX_RELEASE: ${{ needs.update.outputs.nix_release }}
+        run: |
+          docker run --rm "nix:${NIX_RELEASE#nix-}" \
+            nix --extra-experimental-features 'nix-command flakes' run nixpkgs#nix-info -- -m
 
   release:
     name: Release
@@ -109,3 +127,15 @@ jobs:
           NIX_RELEASE: ${{ needs.update.outputs.nix_release }}
         with:
           script: await require('.ci/mark-release.js')({require, context, core, github});
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Combine and push images to GitHub Container Registry
+        env:
+          NIX_RELEASE: ${{ needs.update.outputs.nix_release }}
+        run: .ci/push-containers.sh

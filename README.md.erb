@@ -17,7 +17,7 @@ script so that it fetches them from GitHub instead.
 ### Systems
 
 ```sh
-sh <(curl -L https://github.com/numtide/nix-unstable-installer/releases/download/<%= release_name %>/install)
+sh <(curl -L <%= server_url %>/<%= repository %>/releases/download/<%= release_name %>/install)
 ```
 
 ### GitHub Actions
@@ -36,11 +36,17 @@ jobs:
     - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@<%= install_nix_action_version %>
       with:
-        install_url: https://github.com/numtide/nix-unstable-installer/releases/download/<%= release_name %>/install
+        install_url: <%= server_url %>/<%= repository %>/releases/download/<%= release_name %>/install
     # Run the general flake checks
     - run: nix flake check
     # Verify that the main program builds
     - run: nix shell -c echo OK
+```
+
+### Docker
+
+```sh
+docker run --rm -ti ghcr.io/<%= repository %>/nix:<%= release_name.delete_prefix("nix-") %>
 ```
 
 ## Current release process

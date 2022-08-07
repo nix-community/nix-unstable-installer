@@ -9,15 +9,15 @@ script so that it fetches them from GitHub instead.
 
 ## Latest release
 
-* Release: `nix-2.10.0pre20220728_86fcd4f`
-* Hydra eval: <https://hydra.nixos.org/eval/1773364>
+* Release: `nix-2.10.0pre20220804_7d1280b`
+* Hydra eval: <https://hydra.nixos.org/eval/1774561>
 
 ## Usage
 
 ### Systems
 
 ```sh
-sh <(curl -L https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.10.0pre20220728_86fcd4f/install)
+sh <(curl -L https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.10.0pre20220804_7d1280b/install)
 ```
 
 ### GitHub Actions
@@ -33,10 +33,10 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - uses: cachix/install-nix-action@v17
       with:
-        install_url: https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.10.0pre20220728_86fcd4f/install
+        install_url: https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.10.0pre20220804_7d1280b/install
     # Run the general flake checks
     - run: nix flake check
     # Verify that the main program builds
@@ -46,6 +46,6 @@ jobs:
 ## Current release process
 
 * Run `./update.rb [eval_id]` (uses latest successful if no eval ID given)
-* Tag with the release name
+* Commit and tag with the release name
 * Push to GitHub
 * Create a new GitHub release and attach all files in the ./dist folder

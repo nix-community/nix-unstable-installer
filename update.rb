@@ -41,7 +41,7 @@ def download(url, path)
   system("curl", "-sfL", "-o", path, url)
 end
 
-def render_readme(eval_id, release_name, install_nix_action_version)
+def render_readme(eval_id, release_name, server_url, repository, install_nix_action_version)
   b = binding
   ERB.new(File.read("README.md.erb")).result b
 end
@@ -63,6 +63,8 @@ def get_eval(eval_id, skip_existing_tag = false)
     "binaryTarball.x86_64-linux",
     "buildStatic.aarch64-linux",
     "buildStatic.x86_64-linux",
+    "dockerImage.aarch64-linux",
+    "dockerImage.x86_64-linux",
     "installerScript",
   ]
   extra_prefixes = ["build.", "buildStatic.", "tests.", "installTests."]
@@ -119,7 +121,9 @@ def get_eval(eval_id, skip_existing_tag = false)
 
     case job.split(".", 2).first
     when "buildStatic"
-      dest = release_name + "-static-" + job.split(".", 2).last
+      dest = release_name + "-" + job.split(".", 2).last + "-static"
+    when "dockerImage"
+      dest = release_name + "-" + job.split(".", 2).last + "-container.tar.gz"
     else
       dest = filename
     end
@@ -127,11 +131,14 @@ def get_eval(eval_id, skip_existing_tag = false)
     download("https://hydra.nixos.org/build/#{build_id}/download/1/#{filename}", "dist/#{dest}")
   end
 
+  server_url = ENV.fetch('GITHUB_SERVER_URL', 'https://github.com')
+  repository = ENV.fetch('GITHUB_REPOSITORY', 'numtide/nix-unstable-installer')
+
   # Rewrite the installer
   rewrite("dist/install") do |body|
     body.gsub(
       "url=https://releases.nixos.org/nix/",
-      "url=https://github.com/#{ENV.fetch('GITHUB_REPOSITORY', 'numtide/nix-unstable-installer')}/releases/download/"
+      "url=#{server_url}/#{repository}/releases/download/"
     )
   end
 
@@ -143,7 +150,7 @@ def get_eval(eval_id, skip_existing_tag = false)
   end
 
   # Update the README file
-  readme = render_readme(eval_id, release_name, install_nix_action_version)
+  readme = render_readme(eval_id, release_name, server_url, repository, install_nix_action_version)
   File.write("README.md", readme)
 
   return release_name

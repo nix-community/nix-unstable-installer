@@ -41,9 +41,9 @@ def download(url, path)
   system("curl", "-sfL", "-o", path, url)
 end
 
-def render_readme(eval_id, release_name, server_url, repository, install_nix_action_version)
+def render_release(eval_id, release_name, server_url, repository, install_nix_action_version)
   b = binding
-  ERB.new(File.read("README.md.erb")).result b
+  ERB.new(File.read("RELEASE.md.erb")).result b
 end
 
 def rewrite(path, &block)
@@ -142,16 +142,16 @@ def get_eval(eval_id, skip_existing_tag = false)
     )
   end
 
-  # Get cachix/install-nix-action version for the README
+  # Get cachix/install-nix-action version for the RELEASE file
   begin
     install_nix_action_version = YAML.load_file(".github/workflows/release.yml")["jobs"]["update"]["steps"].find { |step| step.has_key? "uses" and step["uses"].start_with? "cachix/install-nix-action@" }["uses"].split("@", 2).last
   rescue Errno::ENOENT
     install_nix_action_version = "master"
   end
 
-  # Update the README file
-  readme = render_readme(eval_id, release_name, server_url, repository, install_nix_action_version)
-  File.write("README.md", readme)
+  # Generate the RELEASE file
+  release_body = render_release(eval_id, release_name, server_url, repository, install_nix_action_version)
+  File.write("dist/RELEASE.md", release_body)
 
   return release_name
 end
@@ -204,7 +204,6 @@ def main(eval_id)
 
     # Output for CI automation
     if ENV.fetch("GITHUB_ACTIONS", "false") == "true"
-      puts "::set-output name=hydra_eval::#{eval_id}"
       puts "::set-output name=nix_release::#{release_name}"
 
       puts "::set-output name=updated::#{updated}"

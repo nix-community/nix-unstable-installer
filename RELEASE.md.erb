@@ -1,0 +1,47 @@
+## Release Information
+
+* Release name: `<%= release_name %>`
+* Hydra eval: <https://hydra.nixos.org/eval/<%= eval_id %>>
+
+## Usage
+
+### Linux + macOS Systems
+
+```sh
+sh <(curl -L <%= server_url %>/<%= repository %>/releases/download/<%= release_name %>/install)
+```
+
+### GitHub Actions
+
+Example using Flakes:
+
+```yaml
+name: "Example Flake Workflow"
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: cachix/install-nix-action@<%= install_nix_action_version %>
+        with:
+          install_url: <%= server_url %>/<%= repository %>/releases/download/<%= release_name %>/install
+
+      - uses: actions/checkout@v3
+
+      # Run the general flake checks
+      - run: nix flake check
+
+      # Verify that the main program builds
+      - run: nix shell -c echo OK
+```
+
+### Docker / Podman
+
+```sh
+docker run --rm -ti ghcr.io/<%= repository %>/nix:<%= release_name.delete_prefix("nix-") %>
+```

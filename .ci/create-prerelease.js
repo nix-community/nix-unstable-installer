@@ -1,21 +1,21 @@
 module.exports = async ({require, context, core, github}) => {
-  if (!process.env.HYDRA_EVAL || !process.env.NIX_RELEASE)
-    throw new Error('HYDRA_EVAL or NIX_RELEASE empty or undefined');
+  if (!process.env.NIX_RELEASE)
+    throw new Error('NIX_RELEASE empty or undefined');
 
   const fs = require('fs');
   const os = require('os');
   const path = require('path');
 
-  const hydra_eval = process.env.HYDRA_EVAL;
   const nix_release = process.env.NIX_RELEASE;
+
+  const dist_dir = './dist';
+  const body_name = 'RELEASE.md';
 
   const tag = nix_release;
   const name = `${nix_release}`;
-  const body = `https://hydra.nixos.org/eval/${hydra_eval}`;
+  const body = fs.readFileSync(path.join(dist_dir, body_name), 'utf8');
 
-  const asset_dir = './dist';
-
-  const assets = Object.fromEntries(fs.readdirSync(asset_dir).map((file_name) => [file_name, path.join(asset_dir, file_name)]));
+  const assets = Object.fromEntries(fs.readdirSync(dist_dir).filter((file_name) => file_name != body_name).map((file_name) => [file_name, path.join(dist_dir, file_name)]));
 
   core.startGroup('Release information');
 

@@ -32,7 +32,7 @@ or issue before doing large refactors, so your work doesn't get wasted (in
 case of disagreement).
 
 A big thanks to [@lilyinstarlight](https://github.com/lilyinstarlight) who
-took this project from its hacky state to a something well finished.
+took this project from its hacky state to something well finished.
 
 ## License
 

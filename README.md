@@ -1,7 +1,7 @@
 # Nix Unstable Installer
 
 This project is a companion project to
-[nixos/nix](https://github.com/nixos/nix). It takes the latest successful
+[NixOS/nix](https://github.com/NixOS/nix). It takes the latest successful
 builds of the project, and makes them available as GitHub Releases on this
 project.
 

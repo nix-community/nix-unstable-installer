@@ -67,7 +67,7 @@ def get_eval(eval_id, skip_existing_tag = false)
     "dockerImage.x86_64-linux",
     "installerScript",
   ]
-  extra_prefixes = ["build.", "buildStatic.", "tests.", "installTests."]
+  extra_prefixes = ["build.", "buildStatic.", "tests.", "installTests.", "installerTests."]
 
   downloads = []
 

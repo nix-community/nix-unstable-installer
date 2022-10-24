@@ -12,7 +12,7 @@ becomes available in an official release. Or if you like living on the edge.
 
 Pick the release that you want to use. Each release has usage instructions
 attached to it:
-<https://github.com/numtide/nix-unstable-installer/releases/latest>
+<https://github.com/nix-community/nix-unstable-installer/releases/latest>
 
 ## How it works
 

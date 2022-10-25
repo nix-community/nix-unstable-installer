@@ -132,7 +132,7 @@ def get_eval(eval_id, skip_existing_tag = false)
   end
 
   server_url = ENV.fetch('GITHUB_SERVER_URL', 'https://github.com')
-  repository = ENV.fetch('GITHUB_REPOSITORY', 'numtide/nix-unstable-installer')
+  repository = ENV.fetch('GITHUB_REPOSITORY', 'nix-community/nix-unstable-installer')
 
   # Rewrite the installer
   rewrite("dist/install") do |body|
@@ -204,9 +204,10 @@ def main(eval_id)
 
     # Output for CI automation
     if ENV.fetch("GITHUB_ACTIONS", "false") == "true"
-      puts "::set-output name=nix_release::#{release_name}"
-
-      puts "::set-output name=updated::#{updated}"
+      File.open(ENV.fetch("GITHUB_OUTPUT"), "a") do |file|
+        file.puts "nix_release=#{release_name}"
+        file.puts "updated=#{updated}"
+      end
     end
   else
     get_eval(eval_id)

@@ -96,18 +96,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Configure git
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-
-      - name: Mark full release
-        uses: actions/github-script@v6
-        env:
-          NIX_RELEASE: ${{ needs.update.outputs.nix_release }}
-        with:
-          script: await require('.ci/mark-release.js')({require, context, core, github});
-
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -119,3 +107,10 @@ jobs:
         env:
           NIX_RELEASE: ${{ needs.update.outputs.nix_release }}
         run: .ci/push-containers.sh
+
+      - name: Mark full release
+        uses: actions/github-script@v6
+        env:
+          NIX_RELEASE: ${{ needs.update.outputs.nix_release }}
+        with:
+          script: await require('.ci/mark-release.js')({require, context, core, github});

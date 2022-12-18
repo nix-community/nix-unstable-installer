@@ -18,12 +18,17 @@ attached to it:
 
 Every day, a GitHub Action is fired, that does a few things:
 
-* find the last successful build in [Hydra](https://hydra.nixos.org/jobset/nix/master)
-* if there is already a git tag for that build, abort
-* pull all the build artefacts
-* update the URL in the installer script to point to this repo
-* render the RELEASE.md.erb file
-* publish all of that as a github release.
+* Find the last successful build of jobset
+[`nix:master`](https://hydra.nixos.org/jobset/nix/master) in Hydra
+* If there is already a git tag in this repo for that build, abort
+* Pull all of the build artefacts
+* Update the URL in the installer script to point to this repo
+* Render the RELEASE.md.erb file
+* Create a git tag in this repo for the build
+* Publish the artefacts and rendered release notes as a GitHub pre-release
+* Test the install script on the pre-release on both Linux and macOS
+* Publish the container images to GitHub Container Registry on this repo
+* Mark the release as a full release
 
 ## Contributing
 

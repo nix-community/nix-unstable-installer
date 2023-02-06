@@ -80,9 +80,11 @@ jobs:
         if: runner.os == 'Linux'
         env:
           NIX_RELEASE: ${{ needs.update.outputs.nix_release }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
-          docker run --rm "nix:${NIX_RELEASE#nix-}" \
-            nix --extra-experimental-features 'nix-command flakes' run nixpkgs#nix-info -- -m
+          docker run --rm -e GITHUB_TOKEN "nix:${NIX_RELEASE#nix-}" \
+            sh -c 'echo "access-tokens = github.com=$GITHUB_TOKEN" >> /etc/nix/nix.conf && \
+                   nix --extra-experimental-features "nix-command flakes" run nixpkgs#nix-info -- -m'
 
   release:
     name: Release

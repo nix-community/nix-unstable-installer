@@ -60,8 +60,6 @@ jobs:
       - uses: cachix/install-nix-action@v19
         with:
           install_url: ${{ github.server_url }}/${{ github.repository }}/releases/download/${{ needs.update.outputs.nix_release }}/install
-          extra_nix_config: |
-            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
           nix_path: nixpkgs=channel:nixpkgs-unstable
 
       - name: Run nix-info

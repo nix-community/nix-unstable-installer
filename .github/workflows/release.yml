@@ -42,7 +42,7 @@ jobs:
 
       - name: Create release
         if: steps.update.outputs.updated == 'true'
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         env:
           NIX_RELEASE: ${{ steps.update.outputs.nix_release }}
         with:
@@ -109,7 +109,7 @@ jobs:
         run: .ci/push-containers.sh
 
       - name: Mark full release
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         env:
           NIX_RELEASE: ${{ needs.update.outputs.nix_release }}
         with:

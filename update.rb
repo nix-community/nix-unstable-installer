@@ -68,6 +68,7 @@ def get_eval(eval_id, skip_existing_tag = false)
     "installerScript",
   ]
   extra_prefixes = ["build.", "buildStatic.", "tests.", "installTests.", "installerTests."]
+  exclude_jobs = ["tests.setuid.i686-linux"]
 
   downloads = []
 
@@ -77,7 +78,7 @@ def get_eval(eval_id, skip_existing_tag = false)
     data = fetch_json("https://hydra.nixos.org/build/#{build_id}")
     job = data["job"]
 
-    if dist_jobs.none?(job) and extra_prefixes.none? { |prefix| job.start_with? prefix }
+    if dist_jobs.none?(job) and extra_prefixes.none? { |prefix| job.start_with? prefix } or exclude_jobs.include?(job)
       next
     end
 

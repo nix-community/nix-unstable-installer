@@ -55,6 +55,7 @@ end
 def get_eval(eval_id, skip_existing_tag = false)
   release_name = nil
 
+  release_job = "build.x86_64-linux"
   dist_jobs = [
     "binaryTarball.aarch64-darwin",
     "binaryTarball.aarch64-linux",
@@ -70,6 +71,7 @@ def get_eval(eval_id, skip_existing_tag = false)
   extra_prefixes = ["build.", "buildStatic.", "tests.", "installTests.", "installerTests."]
   exclude_jobs = ["tests.setuid.i686-linux"]
 
+  required_jobs = [release_job] + dist_jobs
   downloads = []
 
   # Fetch information from Hydra
@@ -83,12 +85,12 @@ def get_eval(eval_id, skip_existing_tag = false)
     end
 
     if data["buildstatus"].nil? or data["buildstatus"] > 0
-      puts "evaluation #{eval_id} has failed or queued jobs"
+      puts "evaluation #{eval_id} has queued or failed job: #{job}"
       return :failure
     end
 
     case job
-    when "build.x86_64-linux"
+    when release_job
       # Get the release name
       release_name = data["nixname"]
       puts "release name: #{release_name}"
@@ -101,6 +103,13 @@ def get_eval(eval_id, skip_existing_tag = false)
         filename
       ])
     end
+
+    required_jobs.delete(job)
+  end
+
+  if not required_jobs.empty?
+    puts "evaluation #{eval_id} is missing required jobs: #{required_jobs.join(", ")}"
+    return :failure
   end
 
   # Skip existing tags
